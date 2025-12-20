@@ -1,6 +1,7 @@
 package services;
 
 import domain.Task;
+import domain.enums.TaskStatus;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,20 +30,17 @@ public class TaskService {
                 " \"updatedAt\": \"" + task.getUpdatedAt() + "\"" +
                 "}";
         //Verifica se o JSON não está vazio, caso não esteja adicionada uma , antes da classe formato json
+
+        // Adiciona o json ao arquivo
         try {
             String jsonFile = Files.readString(jsonPath);
             if (!jsonFile.equals("[]")) {
                 json = "," + json;
             }
-        } catch (IOException e) {
-            throw new IOException("Failed to read the json string in the specified json path");
-        }
-        try {
-            String newJson = Files.readString(jsonPath);
-            newJson = newJson.replace("]", "");
-            newJson += json;
-            newJson += "]";
-            Files.writeString(jsonPath, newJson);
+            jsonFile = jsonFile.replace("]", "");
+            jsonFile += json;
+            jsonFile += "]";
+            Files.writeString(jsonPath, jsonFile);
             System.out.println("Task added successfully");
         } catch (IOException e) {
             throw new IOException("Failed to write the json string in the specified json path");
